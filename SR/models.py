@@ -3,7 +3,7 @@ from django.utils import timezone
 from pydub import AudioSegment
 from django.conf import settings
 from os import listdir, remove
-from utils import WIT_API_KEY
+from utils import WIT_API_KEY, GOOGLE_CLOUD_SPEECH_CREDENTIALS
 import speech_recognition as sr
 
 
@@ -21,10 +21,9 @@ class Speech_Recognition(models.Model):
         recognizer = sr.Recognizer()
         with sr.AudioFile(AUDIO_FILE) as source:
             audio = recognizer.record(source)
-            WIT_AI_KEY = WIT_AI_KEY
             try:
                 # temp_text= recognizer.recognize_google(audio, None, language="es-419")
-                temp_text= recognizer.recognize_wit(audio, key=WIT_AI_KEY)
+                temp_text= recognizer.recognize_wit(audio, key=WIT_API_KEY)
                 self.text += temp_text + " "
                 self.save()
             except sr.UnknownValueError:
