@@ -1,0 +1,100 @@
+{% extends 'SR/base.html' %}
+
+{% block scripts %}
+<script type="text/javascript">
+  /*!
+   * Create an array of word objects, each representing a word in the cloud
+   */
+   var complete_text;
+   {% for item in SR %}
+     complete_text += " " + "{{item.text}}";
+   {% endfor %}
+  var array_text = complete_text.split(" ");
+  var word_array = [];
+  while (array_text.length > 0) {
+    var temp_word = array_text.shift()
+    var count = 1
+    while (array_text.indexOf(temp_word) != -1 ) {
+      array_text.splice(array_text.indexOf(temp_word),1)
+      count += 1
+    }
+    word_array.push({text: temp_word, weight: count})
+  }
+  $(function() {
+    $("#wordcloud").jQCloud(word_array);
+  });
+</script>
+{% endblock scripts %}
+
+
+{% block content %}
+<ul class="nav nav-tabs">
+  <li class="active">
+    <a data-toggle="tab" href="#Visualize">Visualiza</a>
+  </li>
+  <li>
+    <a data-toggle="tab" href="#Explore">Explora</a>
+  </li>
+  <li>
+    <a data-toggle="tab" href="#Create">Crea</a>
+  </li>
+</ul>
+<div class="tab-content">
+  <div id="Visualize" class="tab-pane fade in active">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        ¿Que es lo mas hablado en nuestro servicio?
+      </div>
+      <div class="panel-body" id="wordcloud" style="width: 550px; height: 550px; margin: Auto;">
+      </div>
+    </div>
+  </div>
+  <div id="Explore" class="tab-pane fade">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Explora y aniza todos los recursos cargados
+      </div>
+      <div class="panel-body">
+        <ul class="list-group">
+          {% for item in SR %}
+            <a class="list-group-item" href="{% url 'sr_detail' item_id=item.pk %}">
+              {{item}}
+            </a>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="Create" class="tab-pane fade">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Crea nuevas entradas para ser analizadas
+      </div>
+      <div class="panel-body">
+        <div class="form-groups">
+          <form enctype="multipart/form-data" method="POST" class="post-form">{% csrf_token %}
+            <div class="row">
+              <div class="col-md-2">
+                <label for="id_description">Archivo de audio en formato WAV</label>
+                {{form.audioFile}}
+                <p></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <label for="id_description">Descripcion</label>
+                {{form.description}}
+                <p></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <button type="submit" class="save btn btn-default">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

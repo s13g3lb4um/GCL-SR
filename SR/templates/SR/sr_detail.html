@@ -1,0 +1,70 @@
+{% extends 'SR/base.html' %}
+
+{% block scripts %}
+<script type="text/javascript">
+  /*!
+   * Create an array of word objects, each representing a word in the cloud
+   */
+  var complete_text = "{{item.text}}";
+  var array_text = complete_text.split(" ");
+  var word_array = [];
+  while (array_text.length > 0) {
+    var temp_word = array_text.shift()
+    var count = 1
+    while (array_text.indexOf(temp_word) != -1 ) {
+      array_text.splice(array_text.indexOf(temp_word),1)
+      count += 1
+    }
+    word_array.push({text: temp_word, weight: count})
+  }
+  $(function() {
+    // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
+    $("#wordcloud").jQCloud(word_array);
+  });
+</script>
+{% endblock scripts %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        {{item.description}} - {{item.created_date}}
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <audio controls>
+          <source src="{{item.audioFile.url}}" type="audio/wav">
+        </audio>
+        <a class="btn btn-primary" href="{% url 'analyze_audio' item_id=item.pk %}" role="button">Analizar</a>
+       </audio>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        {{item.text}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-body" id="wordcloud" style="width: 550px; height: 350px;">
+
+      </div>
+    </div>
+  </div>
+  <a class="btn btn-danger" href="{% url 'sr_remove' item_id=item.pk %}" role="button">Eliminar</a>
+</div>
+{% endblock content %}
