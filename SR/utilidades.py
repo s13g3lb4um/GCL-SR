@@ -2,7 +2,7 @@ from django.core.validators import FileExtensionValidator
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 
-EXTENSIONS_ALLOW = ['.mp3', '.wav', '.flv', '.ogg']
+EXTENSIONS_ALLOW = ['.mp3', '.wav', '.flv', '.ogg', 'm4a']
 
 
 def audioFile_validator_manual(value):
@@ -22,4 +22,4 @@ def audioFile_validator_manual(value):
 def getExtension(value):
     for pos in EXTENSIONS_ALLOW:
         if pos in str(value):
-            return pos.partition('.')
+            return str(EXTENSIONS_ALLOW.index(pos))
