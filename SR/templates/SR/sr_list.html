@@ -28,19 +28,20 @@
 
 
 {% block content %}
-<ul class="nav nav-tabs">
-  <li class="active">
+
+<ul class="nav nav-tabs" >
+  <li {% if tab == "Visualize"  %} class="active" {% endif %}>
     <a data-toggle="tab" href="#Visualize">Visualiza</a>
   </li>
-  <li>
+  <li {% if tab == "Explore"  %} class="active" {% endif %}>
     <a data-toggle="tab" href="#Explore">Explora</a>
   </li>
-  <li>
+  <li {% if tab == "Create"  %} class="active" {% endif %}>
     <a data-toggle="tab" href="#Create">Crea</a>
   </li>
 </ul>
 <div class="tab-content">
-  <div id="Visualize" class="tab-pane fade in active">
+  <div id="Visualize" {% if tab == "Visualize"  %} class="tab-pane fade in active" {%else%}  class="tab-pane fade" {% endif %}>
     <div class="panel panel-default">
       <div class="panel-heading">
         ¿Que es lo mas hablado en nuestro servicio?
@@ -49,7 +50,7 @@
       </div>
     </div>
   </div>
-  <div id="Explore" class="tab-pane fade">
+  <div id="Explore" {% if tab == "Explore"  %} class="tab-pane fade in active" {%else%}  class="tab-pane fade" {% endif %}>
     <div class="panel panel-default">
       <div class="panel-heading">
         Explora y aniza todos los recursos cargados
@@ -65,7 +66,7 @@
       </div>
     </div>
   </div>
-  <div id="Create" class="tab-pane fade">
+  <div id="Create" {% if tab == "Create"  %} class="tab-pane fade in active" {%else%}  class="tab-pane fade" {% endif %}>
     <div class="panel panel-default">
       <div class="panel-heading">
         Crea nuevas entradas para ser analizadas
@@ -73,9 +74,10 @@
       <div class="panel-body">
         <div class="form-groups">
           <form enctype="multipart/form-data" method="POST" class="post-form">{% csrf_token %}
+            {{ form.errors }}
             <div class="row">
-              <div class="col-md-2">
-                <label for="id_description">Archivo de audio en formato WAV</label>
+              <div class="col-md-8">
+                <label for="id_description">Archivo de audio</label>
                 {{form.audioFile}}
                 <p></p>
               </div>

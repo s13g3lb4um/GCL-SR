@@ -4,11 +4,13 @@ from pydub import AudioSegment
 from django.conf import settings
 from os import listdir, remove
 from . utils import WIT_API_KEY, GOOGLE_CLOUD_SPEECH_CREDENTIALS
+from . validaciones import audioFile_validator_manual
 import speech_recognition as sr
 
 
 class Speech_Recognition(models.Model):
-    audioFile = models.FileField(upload_to='audios/%Y/%m/%d/')
+    audioFile = models.FileField(upload_to='audios/%Y/%m/%d/',
+                                 validators=[audioFile_validator_manual])
     description = models.CharField(max_length=100)
     text = models.TextField(blank=True)
     created_date = models.DateField(default=timezone.now)
@@ -34,7 +36,7 @@ class Speech_Recognition(models.Model):
                     {0}".format(e))
 
     def analyze_audio(self):
-        self.text = "test "
+        self.text = " "
         AUDIO_FILE = self.audioFile.path
         file_in = AudioSegment.from_wav(AUDIO_FILE)
         if int(file_in.duration_seconds) > 5:

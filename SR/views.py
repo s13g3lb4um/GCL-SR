@@ -6,14 +6,18 @@ from os import remove
 
 
 def sr_list(request):
+    SR = Speech_Recognition.objects.order_by('-created_date')
     if request.method == 'POST':
         new_sr = create_sr(request.POST, request.FILES)
         if new_sr.is_valid():
             new_sr.save()
+        else:
+            return render(request, 'SR/sr_list.html',
+                          {'SR': SR, 'form': new_sr, 'tab': 'Create'})
     else:
         new_sr = create_sr()
-    SR = Speech_Recognition.objects.order_by('-created_date')
-    return render(request, 'SR/sr_list.html', {'SR': SR, 'form': new_sr})
+    return render(request, 'SR/sr_list.html', {'SR': SR, 'form': new_sr,
+                                               'tab': 'Visualize'})
 
 
 def sr_detail(request, item_id):
