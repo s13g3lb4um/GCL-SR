@@ -22,4 +22,4 @@ def audioFile_validator_manual(value):
 def getExtension(value):
     for pos in EXTENSIONS_ALLOW:
         if pos in str(value):
-            return pos
+            return pos.partition('.')

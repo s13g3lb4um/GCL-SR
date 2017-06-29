@@ -4,7 +4,7 @@ from pydub import AudioSegment
 from django.conf import settings
 from os import listdir, remove
 from . utils import WIT_API_KEY, GOOGLE_CLOUD_SPEECH_CREDENTIALS
-from . validaciones import audioFile_validator_manual, getExtension
+from . utilidades import audioFile_validator_manual, getExtension
 import speech_recognition as sr
 
 
@@ -24,7 +24,8 @@ class Speech_Recognition(models.Model):
         with sr.AudioFile(AUDIO_FILE) as source:
             audio = recognizer.record(source)
             try:
-                # temp_text = recognizer.recognize_google(audio, None, language="es-419")
+                # temp_text = recognizer.recognize_google(audio, None,
+                #           language="es-419")
                 temp_text = recognizer.recognize_wit(audio, key=WIT_API_KEY)
                 self.text += temp_text + " "
                 self.save()
@@ -38,8 +39,7 @@ class Speech_Recognition(models.Model):
     def analyze_audio(self):
         self.text = " "
         AUDIO_FILE = self.audioFile.path
-        file_in = AudioSegment.from_file(AUDIO_FILE, format=getExtension(
-            self.audioFile.path))
+        file_in = AudioSegment.from_file(AUDIO_FILE)
         if int(file_in.duration_seconds) > 5:
             for a in range(0, int(file_in.duration_seconds), 5):
                 b = a * 1000
@@ -49,7 +49,9 @@ class Speech_Recognition(models.Model):
             for audio_part in listdir(settings.MEDIA_ROOT + "/temp/"):
                 self.recognition(settings.MEDIA_ROOT + "/temp/" + audio_part)
         else:
-            self.recognition()
+            file_in.export(settings.MEDIA_ROOT + "/temp/part.wav",
+                           format="wav")
+            self.recognition(settings.MEDIA_ROOT + "/temp/part.wav")
 
         if len(listdir(settings.MEDIA_ROOT + "/temp/")) > 0:
             for temp_file in listdir(settings.MEDIA_ROOT + "/temp/"):
