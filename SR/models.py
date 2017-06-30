@@ -13,6 +13,7 @@ class Speech_Recognition(models.Model):
                                  validators=[audioFile_validator_manual])
     description = models.CharField(max_length=100)
     text = models.TextField(blank=True)
+    text_cleaned = models.TextField(blank=True)
     created_date = models.DateField(default=timezone.now)
 
     def recognition(self, audio=None):
@@ -56,6 +57,14 @@ class Speech_Recognition(models.Model):
         if len(listdir(settings.MEDIA_ROOT + "/temp/")) > 0:
             for temp_file in listdir(settings.MEDIA_ROOT + "/temp/"):
                 remove(settings.MEDIA_ROOT + "/temp/" + temp_file)
+
+    def clean_text(self):
+        temp_text = []
+        for word in self.text.split(' '):
+            if len(word) > 4:
+                temp_text.append(word)
+        self.text_cleaned = ' '.join(temp_text)
+        self.save()
 
     def __str__(self):
         return self.description + " - " + str(self.created_date)

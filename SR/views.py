@@ -28,6 +28,7 @@ def sr_detail(request, item_id):
 def analyze_audio(request, item_id):
     item = get_object_or_404(Speech_Recognition, pk=item_id)
     item.analyze_audio()
+    item.clean_text()
     return render(request, 'SR/sr_detail.html', {'item': item})
 
 

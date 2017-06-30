@@ -7,7 +7,7 @@
    */
    var complete_text;
    {% for item in SR %}
-     complete_text += " " + "{{item.text}}";
+     complete_text += " " + "{{item.text_cleaned}}";
    {% endfor %}
   var array_text = complete_text.split(" ");
   var word_array = [];
