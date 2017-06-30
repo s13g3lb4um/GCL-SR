@@ -28,7 +28,7 @@ class Speech_Recognition(models.Model):
                 # temp_text = recognizer.recognize_google(audio, None,
                 #           language="es-419")
                 temp_text = recognizer.recognize_wit(audio, key=WIT_API_KEY)
-                self.text += temp_text + " "
+                self.text = self.text + " " + temp_text
                 self.save()
             except sr.UnknownValueError:
                 print("No es posible entender el audio")

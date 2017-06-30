@@ -11,6 +11,13 @@ def sr_list(request):
         new_sr = create_sr(request.POST, request.FILES)
         if new_sr.is_valid():
             new_sr.save()
+            item = get_object_or_404(Speech_Recognition,
+                                     pk=Speech_Recognition.objects.all()[len(
+                                        Speech_Recognition.objects.all())-1].
+                                     pk)
+            item.analyze_audio()
+            item.clean_text()
+            return render(request, 'SR/sr_detail.html', {'item': item})
         else:
             return render(request, 'SR/sr_list.html',
                           {'SR': SR, 'form': new_sr, 'tab': 'Create'})
