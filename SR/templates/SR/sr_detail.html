@@ -24,6 +24,18 @@
 </script>
 {% endblock scripts %}
 
+{% block menu %}
+<header>
+  <nav class="menu">
+    <ul>
+      <li><a href="{% url 'sr_list' tab='Visualize' %}">Inicio</a></li>
+      <li><a href="{% url 'sr_list' tab='Explore' %}">Explorar</a></li>
+      <li><a href="{% url 'sr_list' tab='Create' %}">Crear</a></li>
+    </ul>
+  </nav>
+</header>
+{% endblock %}
+
 {% block content %}
 <div class="row">
   <div class="col-md-8">

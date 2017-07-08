@@ -5,7 +5,7 @@ from os import remove
 # Create your views here.
 
 
-def sr_list(request):
+def sr_list(request, tab='Visualize'):
     SR = Speech_Recognition.objects.order_by('-created_date')
     if request.method == 'POST':
         new_sr = create_sr(request.POST, request.FILES)
@@ -24,7 +24,7 @@ def sr_list(request):
     else:
         new_sr = create_sr()
     return render(request, 'SR/sr_list.html', {'SR': SR, 'form': new_sr,
-                                               'tab': 'Visualize'})
+                                               'tab': tab})
 
 
 def sr_detail(request, item_id):
