@@ -48,7 +48,7 @@ class Speech_Recognition(models.Model):
                 b = a * 1000
                 fileOut = file_in[b:b + 5000]
                 fileOut.export(settings.MEDIA_ROOT +
-                               "/temp/part" + str(a) + ".wav", format="wav")
+                               "/temp/part" + str(a/5) + ".wav", format="wav")
             for audio_part in listdir(settings.MEDIA_ROOT + "/temp/"):
                 self.recognition(settings.MEDIA_ROOT + "/temp/" + audio_part)
         else:
