@@ -41,7 +41,7 @@ class Speech_Recognition(models.Model):
         self.text = " "
         AUDIO_FILE = self.audioFile.path
         file_in = AudioSegment.from_file(AUDIO_FILE)
-        if temp not in listdir(settings.MEDIA_ROOT):
+        if 'temp' not in listdir(settings.MEDIA_ROOT):
             mkdir(settings.MEDIA_ROOT + "/temp/", mode=755)
         if int(file_in.duration_seconds) > 5:
             for a in range(0, int(file_in.duration_seconds), 5):
