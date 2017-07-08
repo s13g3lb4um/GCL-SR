@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from pydub import AudioSegment
 from django.conf import settings
-from os import listdir, remove
+from os import listdir, remove, mkdir
 from . utils import WIT_API_KEY, GOOGLE_CLOUD_SPEECH_CREDENTIALS
 from . utilidades import audioFile_validator_manual, getExtension
 import speech_recognition as sr
@@ -41,6 +41,8 @@ class Speech_Recognition(models.Model):
         self.text = " "
         AUDIO_FILE = self.audioFile.path
         file_in = AudioSegment.from_file(AUDIO_FILE)
+        if temp not in listdir(settings.MEDIA_ROOT):
+            mkdir(settings.MEDIA_ROOT + "/temp/", mode=755)
         if int(file_in.duration_seconds) > 5:
             for a in range(0, int(file_in.duration_seconds), 5):
                 b = a * 1000
