@@ -9,6 +9,12 @@ urlpatterns = [
     url(r'^#Create$', views.sr_list, {'tab': 'Create'}, name='sr_list'),
     url(r'^#Visualize$', views.sr_list, {'tab': 'Visualize'}, name='sr_list'),
     url(r'^sr/(?P<item_id>[0-9]+)/$', views.sr_detail, name='sr_detail'),
-    url(r'^sr/(?P<item_id>[0-9]+)/analyzed/$', views.analyze_audio, name='analyze_audio'),
-    url(r'^sr/(?P<item_id>[0-9]+)/removed/$', views.sr_remove, name='sr_remove') 
-] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+    url(r'^sr/(?P<item_id>[0-9]+)/analyzed_1/$', views.analyze_audio,
+        {'modo': 0}, name='analyze_audio'),
+    url(r'^sr/(?P<item_id>[0-9]+)/analyzed_2/$', views.analyze_audio,
+        {'modo': 1}, name='analyze_audio'),
+    url(r'^sr/(?P<item_id>[0-9]+)/analyzed_3/$', views.analyze_audio,
+        {'modo': 2}, name='analyze_audio'),
+    url(r'^sr/(?P<item_id>[0-9]+)/removed/$', views.sr_remove,
+        name='sr_remove')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
