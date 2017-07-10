@@ -51,11 +51,25 @@
   <div class="col-md-8">
     <div class="panel panel-default">
       <div class="panel-body">
-        <audio controls>
-          <source src="{{item.audioFile.url}}" type="audio/wav">
-        </audio>
-        <a class="btn btn-primary" href="{% url 'analyze_audio' item_id=item.pk %}" role="button">Analizar</a>
-       </audio>
+        <div class="row">
+          <div class="col-md-12 center">
+            <audio controls>
+              <source src="{{item.audioFile.url}}" type="audio/wav">
+            </audio>
+          </div>
+        </div>
+        <p></p>
+        <div class="row">
+          <div class="col-md-4 center">
+            <a class="btn btn-primary" href="{% url 'analyze_audio' item_id=item.pk modo=0 %}" role="button">Motor 1</a>
+          </div>
+          <div class="col-md-4 center">
+            <a class="btn btn-primary" href="{% url 'analyze_audio' item_id=item.pk modo=1 %}" role="button">Motor 2</a>
+          </div>
+          <div class="col-md-4 center">
+            <a class="btn btn-primary" href="{% url 'analyze_audio' item_id=item.pk modo=2 %}" role="button">Motor 3</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
