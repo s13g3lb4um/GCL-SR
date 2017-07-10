@@ -34,6 +34,11 @@ h1 a {
   color: black
 }
 
+.center {
+  margin: auto;
+  text-align: center;
+}
+
 .page-header {
   background-color: #68A80F;
   margin-top: 0;
