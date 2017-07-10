@@ -16,7 +16,7 @@ class Speech_Recognition(models.Model):
     text_cleaned = models.TextField(blank=True)
     created_date = models.DateField(default=timezone.now)
 
-    def recognition(self, audio=None):
+    def recognition(self, audio=None, modo=0):
         if audio is None:
             AUDIO_FILE = self.audioFile.path
         else:
@@ -25,9 +25,18 @@ class Speech_Recognition(models.Model):
         with sr.AudioFile(AUDIO_FILE) as source:
             audio = recognizer.record(source)
             try:
-                # temp_text = recognizer.recognize_google(audio, None,
-                #           language="es-419")
-                temp_text = recognizer.recognize_wit(audio, key=WIT_API_KEY)
+                temp_text = ' '
+                if modo == 0:
+                    temp_text = recognizer.recognize_google_cloud(
+                        audio_data=audio,
+                        credentials_json=GOOGLE_CLOUD_SPEECH_CREDENTIALS,
+                        language="es-419")
+                elif modo == 1:
+                    temp_text = recognizer.recognize_google(
+                        audio, None, language="es-419")
+                elif modo == 2:
+                    temp_text = recognizer.recognize_wit(
+                        audio, key=WIT_API_KEY)
                 self.text = self.text + " " + temp_text
                 self.save()
             except sr.UnknownValueError:
@@ -37,25 +46,31 @@ class Speech_Recognition(models.Model):
                     "Could not request results from Google Speech Recognition service; \
                     {0}".format(e))
 
-    def analyze_audio(self):
+    def analyze_audio(self, modo=0):
         self.text = " "
         AUDIO_FILE = self.audioFile.path
         file_in = AudioSegment.from_file(AUDIO_FILE)
         if 'temp' not in listdir(settings.MEDIA_ROOT):
             mkdir(settings.MEDIA_ROOT + "/temp/", mode=755)
-        if int(file_in.duration_seconds) > 5:
-            for a in range(0, int(file_in.duration_seconds), 5):
-                b = a * 1000
-                fileOut = file_in[b:b + 5000]
-                fileOut.export(settings.MEDIA_ROOT +
-                               "/temp/part" + str(a/5) + ".wav", format="wav")
-            for audio_part in listdir(settings.MEDIA_ROOT + "/temp/"):
-                self.recognition(settings.MEDIA_ROOT + "/temp/" + audio_part)
+        if modo != 0:
+            if int(file_in.duration_seconds) > 5:
+                for a in range(0, int(file_in.duration_seconds), 5):
+                    b = a * 1000
+                    fileOut = file_in[b:b + 5000]
+                    fileOut.export(settings.MEDIA_ROOT +
+                                   "/temp/part" + str(a / 5) + ".wav",
+                                   format="wav")
+                for audio_part in listdir(settings.MEDIA_ROOT + "/temp/"):
+                    self.recognition(
+                        settings.MEDIA_ROOT + "/temp/" + audio_part, modo)
+            else:
+                file_in.export(settings.MEDIA_ROOT + "/temp/part.wav",
+                               format="wav")
+                self.recognition(settings.MEDIA_ROOT + "/temp/part.wav", modo)
         else:
             file_in.export(settings.MEDIA_ROOT + "/temp/part.wav",
                            format="wav")
-            self.recognition(settings.MEDIA_ROOT + "/temp/part.wav")
-
+            self.recognition(settings.MEDIA_ROOT + "/temp/part.wav", modo)
         if len(listdir(settings.MEDIA_ROOT + "/temp/")) > 0:
             for temp_file in listdir(settings.MEDIA_ROOT + "/temp/"):
                 remove(settings.MEDIA_ROOT + "/temp/" + temp_file)
