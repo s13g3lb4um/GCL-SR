@@ -42,6 +42,7 @@ def analyze_audio(request, item_id, modo):
 
 def sr_remove(request, item_id):
     item = get_object_or_404(Speech_Recognition, pk=item_id)
-    remove(item.audioFile.path)
+    if isfile(item.audioFile.path):
+        remove(item.audioFile.path)
     item.delete()
     return redirect('sr_list')
