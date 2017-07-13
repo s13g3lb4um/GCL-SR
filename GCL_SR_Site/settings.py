@@ -83,7 +83,6 @@ if DEBUG_MODE:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
-    STATIC_URL = '/static/'
 else:
     DATABASES = {
         # 'default': {
@@ -97,7 +96,6 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
-    STATIC_URL = '/static/'
 
 
 # Password validation
@@ -144,3 +142,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'Media')
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
